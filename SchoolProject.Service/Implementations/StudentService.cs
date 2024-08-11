@@ -21,11 +21,6 @@ namespace SchoolProject.Service.Implementations
 
         public async Task<string> AddAsync(Student student)
         {
-            var studentResult = _studentRepository.GetTableNoTracking()
-                                                  .FirstOrDefault(x => x.Name == student.Name);
-            if (studentResult != null)
-                return "Exist";
-
             await _studentRepository.AddAsync(student);
             return "success";
 
@@ -43,6 +38,15 @@ namespace SchoolProject.Service.Implementations
         public async Task<List<Student>> GetStudentsListAsync()
         {
             return await _studentRepository.GetStudentsListAsync();
+        }
+
+        public async Task<bool> IsNameExist(string name)
+        {
+            var student = _studentRepository.GetTableNoTracking()
+                                                  .FirstOrDefault(x => x.Name == name);
+            if (student == null)
+                return false;
+            return true;
         }
     }
 }
